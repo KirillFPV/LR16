@@ -101,7 +101,7 @@
               "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
               "const product = pm.response.json();",
               "pm.collectionVariables.set(\"productId\", product.id);",
-              "pm.test(\"Product fields are returned\", () => { pm.expect(product).to.include({ sku: pm.collectionVariables.get(\"sku\"), name: \"USB-C cable\", quantity: 3 }); });",
+              "pm.test(\"Created product retains punctuation in its name\", () => { pm.expect(product).to.include({ sku: pm.collectionVariables.get(\"sku\"), name: \"Engineer's USB-C cable; 1 m\", quantity: 3 }); });",
               "pm.test(\"Location points to the new resource\", () => { pm.expect(product.id).to.be.a(\"number\").and.above(0); pm.expect(pm.response.headers.get(\"Location\")).to.eql(\"/products/\" + product.id); });"
             ]
           }
@@ -126,7 +126,7 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"sku\": \"{{sku}}\",\n  \"name\": \"USB-C cable\",\n  \"quantity\": 3\n}",
+          "raw": "{\n  \"sku\": \"{{sku}}\",\n  \"name\": \"Engineer's USB-C cable; 1 m\",\n  \"quantity\": 3\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -178,7 +178,7 @@
             "type": "text/javascript",
             "exec": [
               "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
-              "pm.test(\"Stored fields match the request\", () => { pm.expect(pm.response.json()).to.eql({ id: Number(pm.collectionVariables.get(\"productId\")), sku: pm.collectionVariables.get(\"sku\"), name: \"USB-C cable\", quantity: 3 }); });"
+              "pm.test(\"Stored fields match the request including punctuation\", () => { pm.expect(pm.response.json()).to.eql({ id: Number(pm.collectionVariables.get(\"productId\")), sku: pm.collectionVariables.get(\"sku\"), name: \"Engineer's USB-C cable; 1 m\", quantity: 3 }); });"
             ]
           }
         }
@@ -207,7 +207,7 @@
             "type": "text/javascript",
             "exec": [
               "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
-              "pm.test(\"Replacement preserves the ID\", () => { pm.expect(pm.response.json()).to.eql({ id: Number(pm.collectionVariables.get(\"productId\")), sku: pm.collectionVariables.get(\"sku\"), name: \"USB-C cable, 2 m\", quantity: 8 }); });"
+              "pm.test(\"Replacement preserves the ID and retains punctuation\", () => { pm.expect(pm.response.json()).to.eql({ id: Number(pm.collectionVariables.get(\"productId\")), sku: pm.collectionVariables.get(\"sku\"), name: \"Engineer's USB-C cable; 2 m\", quantity: 8 }); });"
             ]
           }
         }
@@ -232,7 +232,7 @@
         },
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"sku\": \"{{sku}}\",\n  \"name\": \"USB-C cable, 2 m\",\n  \"quantity\": 8\n}",
+          "raw": "{\n  \"sku\": \"{{sku}}\",\n  \"name\": \"Engineer's USB-C cable; 2 m\",\n  \"quantity\": 8\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -250,7 +250,7 @@
             "type": "text/javascript",
             "exec": [
               "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
-              "pm.test(\"Replacement is stored in the database\", () => { pm.expect(pm.response.json()).to.include({ name: \"USB-C cable, 2 m\", quantity: 8 }); });"
+              "pm.test(\"Replacement text is stored with its punctuation\", () => { pm.expect(pm.response.json()).to.include({ name: \"Engineer's USB-C cable; 2 m\", quantity: 8 }); });"
             ]
           }
         }

@@ -54,6 +54,20 @@ USER 10001:10001
     return product
 ```
 
+## Защита от SQL-инъекций
+
+Все SQL-запросы используют фиксированный текст. API передаёт артикул, название, количество, идентификатор и параметры пагинации отдельными аргументами `execute()`. Psycopg отправляет текст запроса и его параметры в PostgreSQL отдельно. [Код запроса](app/main.py#L118) · [Документация Psycopg](https://www.psycopg.org/psycopg3/docs/basic/params.html)
+
+```python
+product = conn.execute(
+    """INSERT INTO products (sku, name, quantity)
+       VALUES (%s, %s, %s) RETURNING id, sku, name, quantity""",
+    (data.sku, data.name, data.quantity),
+).fetchone()
+```
+
+Коллекция Postman проверяет, что при создании, обновлении и повторном чтении позиции название с апострофом и точкой с запятой сохраняется полностью.
+
 ## Проверка в Postman
 
 Импортируйте [коллекцию](postman/Inventory.postman_collection.json) в Postman и запустите её целиком. Для проверки из терминала используйте Postman CLI.
